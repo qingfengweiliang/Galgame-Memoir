@@ -13,8 +13,8 @@ Bangumi / VNDB / Steam / SteamGridDB / AnimeTrace / SauceNAO 自动识别与信�
 <img width="800"  alt="夜-初始页" src="https://github.com/user-attachments/assets/f493a154-6136-4683-99ed-81a562cb9192" />
 
 # 主页面预览
-- <img width="800" alt="白-主页面" src="https://github.com/user-attachments/assets/cce85cac-f922-4502-a7f7-4e7414ec738e" />
-- <img width="800" alt="夜-主页面" src="https://github.com/user-attachments/assets/810b7584-2787-499a-91a6-3424cdc58649" />
+ <img width="800" alt="白-主页面" src="https://github.com/user-attachments/assets/cce85cac-f922-4502-a7f7-4e7414ec738e" />
+ <img width="800" alt="夜-主页面" src="https://github.com/user-attachments/assets/810b7584-2787-499a-91a6-3424cdc58649" />
 
 
 
@@ -51,10 +51,6 @@ Galgame Manager/
 | --- | --- | --- |
 | Galgame Memoir | **V1.0** | 当前对外版本 |
 | 环境检测工具（环境检测工具.ps1） | **v1.2** | 图形界面工具 |
-| setup_env.ps1 | 1.0 | 工具内部脚本版本 |
-| Galgame Manager.exe | 1.0.0.0 | exe 文件元数据 |
-| Galgame Manager环境检测工具.exe | 0.0.0.0 | exe 文件元数据 |
-| Python | ≥ 3.9 | 本地捆绑 3.14.7（`python安装包/`，不上传） |
 
 > `Galgame Manager环境检测工具.exe` 的文件元数据为 0.0.0.0（该启动器源码未声明版本信息）；
 > **不影响使用，仅文件元数据差异**。
@@ -87,27 +83,15 @@ pillow
 - **启动程序**：优先 `Galgame Manager.exe`，否则用 `pythonw` 起 `src\main.py`
 - 检测项：Python ≥ 3.9、PySide6 / requests / pillow（可选 darkdetect）、.NET Framework 4.x、
   VC++ 运行库、中文字体、网络连通性、CG 根目录、API Key 是否已填写
-- **不会**：安装/升级/卸载 Python、改 PATH、改源码、覆盖 `data\settings.json` 或 `data\galgame.db`
 
 > 工具会自动向上查找项目根（同时含 `src\main.py` 与 `data\`），因此放在子目录里也能正常使用。
 
-## 数据目录（本地，不上传）
+## 数据目录
 
 - `data/galgame.db`：SQLite 数据库（首次运行自动建表）
-- `data/settings.json`：程序设置（**含 API Key / Token，绝不提交**）
+- `data/settings.json`：程序设置
 - `data/covers/`：封面图片
 - `data/screenshots/`：游戏截图
 - `data/profile photo/`：头像预设
 - `data/wallpapers/`：背景图预设
 - `data/user/`：自己选的图（自动收进这里）
-
-## GitHub 备份说明
-
-本仓库只保存 **完整功能代码 + 必要配置/文档 + 必要的小型固定资源**，不包含：
-
-- 个人数据（`data/`：数据库、设置、封面、截图、预设图）
-- 本地回滚点（旧备份已归档到本地 `归档\backup\`，仓库只保留 `backup/README.md`）
-- 离线安装包（`python安装包/`）
-- Python 缓存（`__pycache__/`、`*.pyc`）
-- API Key / Token / 密码 / Cookie / 私钥等敏感信息
-- 给 AI 的提示词 / 操作记录文档（见 `.gitignore` 末条）
