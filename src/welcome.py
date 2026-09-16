@@ -1552,9 +1552,9 @@ class EmptyStateBox(GlassSurface):
         hint.setTextFormat(Qt.PlainText)
         hint.setAlignment(Qt.AlignCenter)
         hint.setWordWrap(True)
-        hint.setMaximumWidth(260)
-        lay.addWidget(hint, 0, Qt.AlignHCenter)
-
+        # 不要让标签只拿到 sizeHint 宽度：那样文字会折成更多行、超出布局给出的高度而被上下裁断
+        # （data 为空显示空状态时最明显）。让标签撑满内容宽度，水平居中由上面的 setAlignment 负责。
+        lay.addWidget(hint)
         lay.addStretch(1)
 
 
