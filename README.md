@@ -1,7 +1,4 @@
-<img width="2044" height="1277" alt="29adc5fe-ef0c-4b81-bd07-0cafe9b5c6eb" src="https://github.com/user-attachments/assets/28847f2f-bd4b-4cdc-8638-14f90a00db50" /><img width="2044" height="1277" alt="image" src="https://github.com/user-attachments/assets/27b587eb-f9bd-4c2c-b582-33baeb2631c7" /># Galgame Memoir — V1.0
-
-<img width="2044" height="1277" alt="9ced521a-9cef-48a8-88e7-10e6f968d56b" src="https://github.com/user-attachments/assets/3f718714-a41b-4447-9731-30423e6150be" />
-
+# Galgame Memoir — V1.0
 
 一个基于 **Python / PySide6（Qt6）** 的本地 Galgame 信息管理与收藏记录工具。
 完全离线单机运行：游戏信息管理、收藏与状态记录、数据库、CG 管理、随机 CG、悬浮 CG、
@@ -10,6 +7,16 @@ Bangumi / VNDB / Steam / SteamGridDB / AnimeTrace / SauceNAO 自动识别与信�
 
 - **当前版本：V1.0**
 - 详细说明见 [`help/README.md`](help/README.md)（该文档为历史版本，部分内容可能已过时，以本 README 为准）
+
+# 初始页预览
+<img width="800"  alt="白-初始页" src="https://github.com/user-attachments/assets/ea5c4f37-0348-4c09-97f3-43a03883433e" />
+<img width="800"  alt="夜-初始页" src="https://github.com/user-attachments/assets/f493a154-6136-4683-99ed-81a562cb9192" />
+
+# 主页面预览
+- <img width="800" alt="白-主页面" src="https://github.com/user-attachments/assets/cce85cac-f922-4502-a7f7-4e7414ec738e" />
+- <img width="800" alt="夜-主页面" src="https://github.com/user-attachments/assets/810b7584-2787-499a-91a6-3424cdc58649" />
+
+
 
 ## 目录结构
 
