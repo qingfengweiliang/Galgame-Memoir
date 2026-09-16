@@ -30,7 +30,6 @@ data/*
 
 # ---- 本地回滚点（只保留说明）----
 backup/*
-!backup/README.md
 
 # ---- 不属于项目内容：AI 提示词 / 操作记录，绝不提交 ----
 /Galgame_Memoir_GitHub_备份与Agent提示词-1.md
