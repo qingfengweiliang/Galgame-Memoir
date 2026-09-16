@@ -8,6 +8,17 @@ Bangumi / VNDB / Steam / SteamGridDB / AnimeTrace / SauceNAO 自动识别与信�
 - **当前版本：V1.0**
 - 详细说明见 [`help/README.md`](help/README.md)
 
+## 下载（Windows 10 / 11，64 位）
+
+| 文件 | 大小 | 说明 |
+| --- | --- | --- |
+| [**GalgameMemoir_Setup_V1.0.exe**](https://github.com/qingfengweiliang/Galgame-Memoir/releases/download/v1.0/GalgameMemoir_Setup_V1.0.exe) | 68.46 MB | 安装包：**自带 Python 运行时，免装依赖、装完即用**；数据保存在安装目录的 `data\` 下 |
+
+- 发布页：[Releases · v1.0](https://github.com/qingfengweiliang/Galgame-Memoir/releases/tag/v1.0)
+- SHA256：`695952428F8E069831E42169D54CA00801295078C381F3B6F1AE933C0AE7A38B`
+
+> 不想安装也可以：直接按下方「运行方式」从源码运行。
+
 # 初始页预览
 <img width="800"  alt="白-初始页" src="https://github.com/user-attachments/assets/ea5c4f37-0348-4c09-97f3-43a03883433e" />
 <img width="800"  alt="夜-初始页" src="https://github.com/user-attachments/assets/f493a154-6136-4683-99ed-81a562cb9192" />
