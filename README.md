@@ -1,4 +1,7 @@
-# Galgame Memoir — V1.0
+<img width="2044" height="1277" alt="29adc5fe-ef0c-4b81-bd07-0cafe9b5c6eb" src="https://github.com/user-attachments/assets/28847f2f-bd4b-4cdc-8638-14f90a00db50" /><img width="2044" height="1277" alt="image" src="https://github.com/user-attachments/assets/27b587eb-f9bd-4c2c-b582-33baeb2631c7" /># Galgame Memoir — V1.0
+
+<img width="2044" height="1277" alt="9ced521a-9cef-48a8-88e7-10e6f968d56b" src="https://github.com/user-attachments/assets/3f718714-a41b-4447-9731-30423e6150be" />
+
 
 一个基于 **Python / PySide6（Qt6）** 的本地 Galgame 信息管理与收藏记录工具。
 完全离线单机运行：游戏信息管理、收藏与状态记录、数据库、CG 管理、随机 CG、悬浮 CG、
