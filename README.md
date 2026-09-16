@@ -22,27 +22,24 @@ Bangumi / VNDB / Steam / SteamGridDB / AnimeTrace / SauceNAO 自动识别与信�
 
 ```text
 Galgame Manager/
-├── Galgame Manager.exe                     # ★ 双击启动（C# 启动器，文件元数据 1.0.0.0）
-├── src/                                    # 全部源代码（15 个 .py）
+├── Galgame Manager.exe                     # ★ 双击启动
+├── src/                                    # 全部源代码
 │   ├── main.py  config.py  database.py  net.py  workers.py
 │   ├── theme.py  theme_defs.py  theme_manager.py
 │   ├── dialogs.py  widgets.py  welcome.py
 │   └── cg_library.py  random_cg_api.py  random_cg_viewer.py  __init__.py
-├── assets/                                 # 应用图标 + 9 套主题背景（浅/深色，共 18 张）
+├── assets/                                 # 应用图标 + 9 套主题背景
 │   ├── app_icon.png  app_icon.ico
 │   └── themes/{主题名}_{浅色|深色}.jpg
 ├── Galgame Manager环境检测工具/            # 环境检测工具 v1.2
 │   ├── Galgame Manager环境检测工具.exe     # 无黑框启动器
 │   ├── 环境检测工具.ps1                    # 图形界面主程序（v1.2）
-│   ├── setup_env.ps1                       # 一键测速 / 装依赖 / 启动前校验（内部版本 1.0）
+│   ├── setup_env.ps1                       # 一键测速 / 装依赖 / 启动前校验
 │   └── 启动器源码/Launcher.cs  build_exe.bat
 ├── launcher/                               # 主启动器源码（Launcher.cs + AssemblyInfo.cs + build_exe.bat）
 ├── repair/repair.bat                       # 环境修复 + 备用启动
-├── help/README.md                          # 详细说明文档（历史版本，可能已过时）
-├── data/                                   # 本地数据（不上传，仅保留 .gitkeep）
-├── backup/                                 # 回滚点已清理归档（仅保留 README.md）
-├── python安装包/                            # 本地离线 Python 安装包（不上传）
-└── requirements.txt
+├── help/README.md                          # 详细说明文档
+└──data/                                   # 本地数据
 ```
 
 ## 版本
