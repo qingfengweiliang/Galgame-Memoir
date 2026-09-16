@@ -6,7 +6,7 @@
 Bangumi / VNDB / Steam / SteamGridDB / AnimeTrace / SauceNAO 自动识别与信息填充。
 
 - **当前版本：V1.0**
-- 详细说明见 [`help/README.md`](help/README.md)（该文档为历史版本，部分内容可能已过时，以本 README 为准）
+- 详细说明见 [`help/README.md`](help/README.md)
 
 # 初始页预览
 <img width="800"  alt="白-初始页" src="https://github.com/user-attachments/assets/ea5c4f37-0348-4c09-97f3-43a03883433e" />
