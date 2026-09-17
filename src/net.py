@@ -652,10 +652,28 @@ def _bangumi_detail(subject_id) -> dict:
     """三跳抓 Bangumi 详情：subject(简介/infobox) + characters(角色/声优) + persons(制作人员)。
 
     characters / persons 走 best-effort：任一失败只丢该部分，不影响其它字段。
+
+    ⚠️ R18 / 受限条目在 v0 接口里【只对带令牌的请求可见】：不带令牌时接口会假装
+    "条目不存在"而返回 404。搜索那边本来就带了令牌（所以这类条目会出现在搜索结果里），
+    详情这边以前漏了 —— 于是用户选中 R18 条目必然报 404（但浏览器里登录后能正常打开）。
     """
     headers = {"User-Agent": BANGUMI_UA, "Accept": "application/json"}
+    _token = get_bgm_token()
+    if _token:
+        headers["Authorization"] = "Bearer " + _token          # ← 受限条目必需
     base = "https://api.bgm.tv/v0/subjects/" + urllib.parse.quote(str(subject_id))
     resp = _http_get(base, headers=headers, timeout=20)
+    if resp.status_code == 401:
+        raise ValueError("Bangumi 令牌无效或已过期：请到「设置 → API 与账号」重新获取令牌，或换个数据源。")
+    if resp.status_code == 404:
+        if _token:
+            raise ValueError(
+                "Bangumi 返回 404：该条目可能已被删除/合并，或当前令牌无权访问。\n"
+                "可到「设置 → API 与账号」检查令牌，或换个数据源。")
+        raise ValueError(
+            "Bangumi 返回 404：该条目可能是 R18 / 受限条目。\n"
+            "受限条目在没有令牌时对接口不可见（浏览器里登录后能看）。\n"
+            "请先到「设置 → API 与账号」填写 Bangumi 访问令牌，或换个数据源。")
     resp.raise_for_status()
     d = resp.json()
     if not isinstance(d, dict) or not d.get("id"):
