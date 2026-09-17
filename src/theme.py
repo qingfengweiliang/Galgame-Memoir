@@ -19,6 +19,7 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QComboBox, QToolButton,
     QLabel, QLineEdit, QSlider, QPushButton, QStyledItemDelegate, QStyle, QFrame,
+    QLayout,
 )
 
 import config
@@ -1152,6 +1153,79 @@ class SectionCard(QFrame):
         """更新标题后面的小灰字提示（没有 hint 标签时不做事）。"""
         if self.hint_lbl is not None:
             self.hint_lbl.setText(str(text or ""))
+
+
+class FlowLayout(QLayout):
+    """自动换行的流式布局：一行放不下就换到下一行。
+
+    为什么要它：普通 QHBoxLayout 的最小宽度 = 所有子项的宽度之和，子项一多
+    （例如详情页「类型 / 标签」的胶囊）就会把整个页面撑得比窗口还宽，
+    连带把同一页里的其它控件（如截图列表）也拉成超宽的一行。
+    本布局的最小宽度只等于"单个最宽的子项"，所以能安全地放进窄窗口。
+    """
+
+    def __init__(self, parent=None, spacing: int = 6, margins: int = 0):
+        super().__init__(parent)
+        self._items = []
+        self.setSpacing(spacing)
+        self.setContentsMargins(margins, margins, margins, margins)
+
+    # ---- QLayout 必须实现的接口 ----
+    def addItem(self, item):
+        self._items.append(item)
+
+    def count(self):
+        return len(self._items)
+
+    def itemAt(self, index):
+        if 0 <= index < len(self._items):
+            return self._items[index]
+        return None
+
+    def takeAt(self, index):
+        if 0 <= index < len(self._items):
+            return self._items.pop(index)
+        return None
+
+    def expandingDirections(self):
+        return Qt.Orientations()
+
+    def hasHeightForWidth(self):
+        return True
+
+    def heightForWidth(self, width):
+        return self._do_layout(QRect(0, 0, width, 0), True)
+
+    def setGeometry(self, rect):
+        super().setGeometry(rect)
+        self._do_layout(rect, False)
+
+    def sizeHint(self):
+        return self.minimumSize()
+
+    def minimumSize(self):
+        size = QSize()
+        for item in self._items:
+            size = size.expandedTo(item.minimumSize())
+        m = self.contentsMargins()
+        return QSize(size.width() + m.left() + m.right(),
+                     size.height() + m.top() + m.bottom())
+
+    # ---- 实际排布 ----
+    def _do_layout(self, rect, test_only):
+        m = self.contentsMargins()
+        eff = rect.adjusted(m.left(), m.top(), -m.right(), -m.bottom())
+        gap = max(0, self.spacing())
+        x, y, line_h = eff.x(), eff.y(), 0
+        for item in self._items:
+            hint = item.sizeHint()
+            if line_h > 0 and x + hint.width() > eff.right():
+                x, y, line_h = eff.x(), y + line_h + gap, 0
+            if not test_only:
+                item.setGeometry(QRect(QPoint(x, y), hint))
+            x += hint.width() + gap
+            line_h = max(line_h, hint.height())
+        return y + line_h - rect.y() + m.bottom()
 
 
 def chip_label(text: str, color: str = "") -> QLabel:

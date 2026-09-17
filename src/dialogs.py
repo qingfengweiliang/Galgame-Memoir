@@ -24,7 +24,7 @@ from PySide6.QtWidgets import (
     QScrollArea, QSizePolicy, QToolButton, QAbstractItemView, QListView, QPlainTextEdit,
     QProgressBar, QMenu, QTableWidget, QTableWidgetItem, QHeaderView, QToolTip,
     QGraphicsOpacityEffect, QGroupBox, QInputDialog, QSlider, QCheckBox, QTabWidget,
-    QRadioButton, QButtonGroup,
+    QRadioButton, QButtonGroup, QStyle,
 )
 
 import config
@@ -65,7 +65,7 @@ from workers import (
 )
 from theme import (
     TopComboBox, PlainHeaderButton, ThemeToggleSwitch, CollapsibleSection, draw_icon,
-    _apply_theme, _apply_bg, SectionCard, chip_label, set_chip_color,
+    _apply_theme, _apply_bg, SectionCard, chip_label, set_chip_color, FlowLayout,
     rounded_cover_pixmap, rounded_pixmap, status_color, pstr, app_icon_pixmap,
 )
 from theme_defs import THEME_DEFS, THEME_ORDER, theme_name
@@ -1423,8 +1423,9 @@ class GameDetailDialog(QDialog):
         info_col.addLayout(chip_row)
 
         # 类型 / 标签 胶囊（读取时动态生成）
-        self.tag_row = QHBoxLayout()
-        self.tag_row.setSpacing(6)
+        # 必须用会换行的流式布局：QHBoxLayout 的最小宽度 = 所有胶囊宽度之和，
+        # 标签一多就会把整页撑得比窗口还宽，截图区会连带变成超宽的一行。
+        self.tag_row = FlowLayout(spacing=6)
         info_col.addLayout(self.tag_row)
 
         self.info_holder = QLabel()
@@ -1490,7 +1491,9 @@ class GameDetailDialog(QDialog):
         lay.addWidget(self.score_box)
 
         # ---- 截图管理区 ----
-        # 做成"单行胶片带"：缩略图整块可见（不再被窗口高度压扁裁切），超出的横向滚动
+        # 自动换行排布：行数由 _fit_ss_height() 按【列表自身宽度】算 ——
+        #   行数 ≤ SS_MAX_ROWS → 整块显示、由整页滚动；
+        #   行数 > SS_MAX_ROWS → 高度封顶，这一块自己带竖向滚动条。
         self.ss_card = SectionCard("截图管理", hint="支持拖拽图片导入")
         upload_row = QHBoxLayout()
         self.upload_btn = QPushButton("上传截图")
@@ -1523,8 +1526,9 @@ class GameDetailDialog(QDialog):
         self.ss_list.setUniformItemSizes(True)
         self.ss_list.setWordWrap(False)
         self.ss_list.setTextElideMode(Qt.ElideRight)
-        # 高度由 _fit_ss_height() 按内容算好，区域内不再出现滚动条（整页滚动）
-        self.ss_list.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        # 高度由 _fit_ss_height() 算好：行数不超上限时不出滚动条（整页滚动），
+        # 截图特别多、超过上限时高度封顶，让这一块出现自己的竖向滚动条
+        self.ss_list.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.ss_list.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.ss_list.setContextMenuPolicy(Qt.CustomContextMenu)
         self.ss_list.customContextMenuRequested.connect(self._show_ss_menu)
@@ -1588,7 +1592,6 @@ class GameDetailDialog(QDialog):
                 w.setParent(None)
         for text in _split_list(g.get("genres")) + _split_list(g.get("tags")):
             self.tag_row.addWidget(chip_label(text))
-        self.tag_row.addStretch(1)
         # 剧情与制作
         self.summary_lbl.setText(str(g.get("summary", "") or "").strip() or "—")
         self.characters_lbl.setText(str(g.get("characters", "") or "").strip() or "—")
@@ -1780,22 +1783,41 @@ class GameDetailDialog(QDialog):
                                   else "支持拖拽图片导入")
         self._fit_ss_height()
 
-    def _fit_ss_height(self):
-        """把截图区高度调成"正好放下全部行"，区域内不出现滚动条（整页滚动）。
+    SS_MAX_ROWS = 3          # 截图区最多直接显示几行；超出则由这一块自己出竖向滚动条
 
-        宽度按窗口宽度推算每行几张；高度随行数变化，所以窗口变宽/变窄时也要重算。
+    def _fit_ss_height(self):
+        """按【截图列表自身的宽度】算每行几张，再把高度设成 min(行数, SS_MAX_ROWS) 行。
+
+        为什么不按窗口宽度算：列表宽度还受页面边距、卡片内边距、页面滚动条，
+        以及同页其它控件（例如标签行有多宽）影响，和窗口宽度并不相等。
+        以前用 self.width() 估算，页面一被撑宽/收窄就会算错行数 ——
+        轻则留白，重则截图被裁掉或只剩一行。
+        行数不超过 SS_MAX_ROWS 时不出滚动条（交给整页滚动）；
+        超过时高度封顶，这一块自带一条竖向滚动条。
         """
         lst = getattr(self, "ss_list", None)
         if lst is None:
             return
         item_w = max(1, self.ss_item_w + lst.spacing() * 2)
         item_h = max(1, self.ss_item_h + lst.spacing() * 2)
-        # 可用宽度 = 窗口宽 - 页面左右边距 - 卡片内边距 - 滚动条预留
-        avail = max(item_w, self.width() - 16 * 2 - 16 * 2 - 18)
-        per_row = max(1, int(avail // item_w))
+        # 优先用列表的真实宽度；首次布局尚未完成时退回按窗口宽度估算
+        avail = lst.width() - 2
+        if lst.viewport().width() > item_w:
+            avail = lst.viewport().width()
+        if avail <= item_w:
+            avail = max(item_w, self.width() - 16 * 2 - 16 * 2 - 18)
         n = lst.count()
-        rows = max(1, (n + per_row - 1) // per_row) if n else 1
-        h = rows * item_h + 8
+
+        def _rows_for(width):
+            per = max(1, int(width // item_w))
+            return max(1, (n + per - 1) // per) if n else 1
+
+        rows = _rows_for(avail)
+        if rows > self.SS_MAX_ROWS:
+            # 将会出现竖向滚动条：可用宽度要再扣掉滚动条宽度
+            sb = lst.style().pixelMetric(QStyle.PM_ScrollBarExtent)
+            rows = _rows_for(max(item_w, avail - sb))
+        h = min(rows, self.SS_MAX_ROWS) * item_h + 8
         lst.setFixedHeight(h)
         if getattr(self, "ss_empty_lbl", None) is not None:
             self.ss_empty_lbl.setFixedHeight(h)
